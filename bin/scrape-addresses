@@ -1,0 +1,15 @@
+#!/usr/bin/env python
+
+import argparse
+import sys
+
+def main():
+    parser = argparse.ArgumentParser(description=""" Scrape park address information from Toronto.ca """)
+    parser.add_argument('-f','--file',default="splash-pads.json", help="File to dump to.")
+    options = parser.parse_args()
+
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        sys.exit(">> Caught user interrupt. Exiting...")
