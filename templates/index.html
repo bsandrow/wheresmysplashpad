@@ -33,23 +33,64 @@
             #map-canvas img {
               max-width: none;
             }
+
+            .infowin_content h1 {
+                font-size: 1.5em;
+            }
+
+            .infowin_content {
+                font-size: 0.80em;
+            }
         </style>
 
         <script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false&extension=.js"></script>
         <script>
             var map;
+            var park_data;
+
+            function add_park_to_map(data) {
+                var place = new google.maps.LatLng(data.coords[0], data.coords[1]);
+                var marker = new google.maps.Marker({
+                    'position': place,
+                    'map': map,
+                    'title': data.name,
+                });
+                var info_content = '<div class="infowin_content">'+
+                    '<h1>' + data.name + '</h1>' +
+                    '<a href="' + data.url + '" title="' + data.name + ' Page"> Park Page on Toronto.ca </a>'+
+                    '</div>';
+                var infowindow = new google.maps.InfoWindow({
+                    content: info_content
+                });
+                google.maps.event.addListener(marker, 'click', function() {
+                    infowindow.open(map, marker);
+                });
+            }
 
             function initialize() {
-              var mapOptions = {
-                     zoom: 11,
-                   center: new google.maps.LatLng(43.669, -79.455),
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-              };
-              map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+                var mapOptions = {
+                       zoom: 10,
+                     center: new google.maps.LatLng(43.6532260, -79.38318430),
+                  mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
             }
 
             $(document).ready(function() {
                 initialize();
+
+                $.ajax('/splash-pads.json', {
+                    'dataType': 'json',
+                    'error': function() {
+                        alert("Data Fetch Failed!");
+                    },
+                    'success': function(data) {
+                        park_data = data;
+                        for (var i = 0; i < data.length; i++) {
+                            add_park_to_map(data[i]);
+                        }
+                    }
+                })
             });
         </script>
     </head>
