@@ -13,17 +13,50 @@
         <script src="/js/bootstrap.min.js"></script>
 
         <style>
+            html, body { height: 100%; }
+
             footer {
                 text-align: center;
                 margin-top: 2em;
                 font-size: 0.85em;
             }
+
+            #map-canvas {
+                padding: 0px;
+                margin: 2em;
+                margin-right: auto;
+                margin-left: auto;
+                width: 80%;
+                height: 66%;
+            }
+
+            #map-canvas img {
+              max-width: none;
+            }
         </style>
+
+        <script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false&extension=.js"></script>
+        <script>
+            var map;
+
+            function initialize() {
+              var mapOptions = {
+                     zoom: 11,
+                   center: new google.maps.LatLng(43.669, -79.455),
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+              };
+              map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+            }
+
+            $(document).ready(function() {
+                initialize();
+            });
+        </script>
     </head>
     <body>
         <div class="container">
             <div class="row"> <center>
-                <h1> Where's My Splashpad, Toronto? </h1>
+                <h2> Where's My Splashpad, Toronto? </h2>
             </center> </div>
             <div class="row">
                 <div class="offset1">
@@ -35,10 +68,8 @@
                     </form>
                 </div>
             </div>
-            <div class="row">
-                <div id="map-canvas"></div>
-            </div>
         </div>
+        <div id="map-canvas"></div>
         <footer>
             &copy; Copyright 2013 Brandon Sandrowicz.
             Built using
