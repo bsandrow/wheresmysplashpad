@@ -1,12 +1,57 @@
 #!/usr/bin/env python
 
 import argparse
+import operator
+import urlparse
 import sys
+import requests
+import lxml.html
+import json
 
 def main():
     parser = argparse.ArgumentParser(description=""" Scrape park address information from Toronto.ca """)
     parser.add_argument('-f','--file',default="splash-pads.json", help="File to dump to.")
     options = parser.parse_args()
+
+    response = requests.get('http://www.toronto.ca/parks/prd/facilities/splash-pads/index.htm')
+    html = lxml.html.fromstring(response.content)
+
+    def normalize_url(url):
+        return urlparse.urljoin('http://www.toronto.ca/parks/prd/facilities/splash-pads/index.htm', url)
+
+    def parse_nav_item(item):
+        return normalize_url(item[0].get('href'))
+
+    nav = html.cssselect('#pfrNavAlpha LI')
+    pages = set(filter(lambda x: x != 'index.htm', map(parse_nav_item, nav)))
+
+    def extract_data(url):
+        response = requests.get(url)
+        html = lxml.html.fromstring(response.content)
+
+        result = html.cssselect('.pfrListing')
+        if len(result) > 1:
+            Exception("Found more than one pfrListing. Page: %s" % url)
+        elif len(result) < 1:
+            Exception("Found no pfrListings. Page: %s" % url)
+
+        listing = result[0]
+        rows = listing.cssselect('tbody tr')
+
+        def parse_row(row):
+            relative_url = row[0][0].get('href')
+            return {
+                'url': normalize_url(relative_url),
+                'name': row[0][0].text,
+                'address': row[1].text,
+            }
+
+        return [ parse_row(row) for row in rows ]
+
+    splash_pads = reduce(operator.add, map(extract_data, pages))
+
+    with open(options.file, 'wb+') as fh:
+        fh.write(json.dumps( splash_pads ))
 
 if __name__ == '__main__':
     try:
