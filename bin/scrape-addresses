@@ -7,6 +7,7 @@ import sys
 import requests
 import lxml.html
 import json
+import geopy
 
 def main():
     parser = argparse.ArgumentParser(description=""" Scrape park address information from Toronto.ca """)
@@ -24,6 +25,7 @@ def main():
 
     nav = html.cssselect('#pfrNavAlpha LI')
     pages = set(filter(lambda x: x != 'index.htm', map(parse_nav_item, nav)))
+    geocoder = geopy.geocoders.GoogleV3()
 
     def extract_data(url):
         response = requests.get(url)
@@ -40,10 +42,33 @@ def main():
 
         def parse_row(row):
             relative_url = row[0][0].get('href')
+            name = row[0][0].text.strip()
+            address = row[1].text.strip() + ", Toronto, Ontario, Canada"
+
+            if address.startswith('445 Huntingwood Dr'):
+                address = 'Bridlewood Park, Toronto, Ontario, Canada'
+            elif address.startswith('845 Danforth Rd'):
+                address = 'Greystone Park, Toronto, Ontario, Canada'
+            elif address.startswith('1873 Bloor St W'):
+                address = 'High Park, Toronto, Ontario, Canada'
+
+            try:
+                place, (lat, lng) = geocoder.geocode(address)
+            except ValueError:
+                print "Blew up with address: %s" % address
+                print "Trying park name..."
+                try:
+                    address = name + ', Toronto, Ontario, Canada'
+                    place, (lat, lng) = geocoder.geocode(address)
+                except ValueError:
+                    print "Blew up with park name: %s" % address
+                    return None
             return {
                 'url': normalize_url(relative_url),
-                'name': row[0][0].text,
-                'address': row[1].text,
+                'name': row[0][0].text.strip(),
+                'raw_address': address,
+                'address': place,
+                'coords': (lat, lng),
             }
 
         return [ parse_row(row) for row in rows ]
