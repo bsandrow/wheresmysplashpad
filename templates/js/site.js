@@ -31,6 +31,10 @@ Site = {
         this.error_div.hide();
     },
 
+    'centerMap': function(position) {
+        this.map.setCenter(position);
+    },
+
     'searchForAddress': function() {
         var site = this;
         site.geocoder.geocode(
@@ -41,6 +45,15 @@ Site = {
                 if (status == google.maps.GeocoderStatus.OK) {
                     var loc = results[0].geometry.location;
                     var latlng = new google.maps.LatLng(loc.lat(), loc.lng());
+                    site.centerMap(latlng);
+                    var marker = new google.maps.Marker({
+                        position: latlng,
+                        map: site.map,
+                        icon: {
+                            path: google.maps.SymbolPath.CIRCLE,
+                            scale: 5,
+                        },
+                    });
                 } else {
                     site.setError("<strong>Error!</strong> Could not find any result.");
                 }
