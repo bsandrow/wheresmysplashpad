@@ -84,55 +84,10 @@
         </style>
 
         <script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false&extension=.js"></script>
+        <script src="/js/site.js"></script>
         <script>
-            var map;
-            var park_data;
-            var map_id = 'map';
-
-            function add_park_to_map(data) {
-                var place = new google.maps.LatLng(data.coords[0], data.coords[1]);
-                var marker = new google.maps.Marker({
-                    position: place,
-                    map: map,
-                    title: data.name,
-                    scrollWheel: false,
-                });
-                var info_content = '<div class="infowin_content">'+
-                    '<h1>' + data.name + '</h1>' +
-                    '<a href="' + data.url + '" title="' + data.name + ' Page"> Park Page on Toronto.ca </a>'+
-                    '</div>';
-                var infowindow = new google.maps.InfoWindow({
-                    content: info_content
-                });
-                google.maps.event.addListener(marker, 'click', function() {
-                    infowindow.open(map, marker);
-                });
-            }
-
-            function initialize() {
-                var mapOptions = {
-                       zoom: 11,
-                     center: new google.maps.LatLng(43.726, -79.385),
-                  mapTypeId: google.maps.MapTypeId.ROADMAP
-                };
-                map = new google.maps.Map(document.getElementById(map_id), mapOptions);
-            }
-
             $(document).ready(function() {
-                initialize();
-
-                $.ajax('/splash-pads.json', {
-                    'dataType': 'json',
-                    'error': function() {
-                        alert("Data Fetch Failed!");
-                    },
-                    'success': function(data) {
-                        park_data = data;
-                        for (var i = 0; i < data.length; i++) {
-                            add_park_to_map(data[i]);
-                        }
-                    }
-                })
+                Site.initialize();
             });
         </script>
     </head>
@@ -144,10 +99,12 @@
         <div id="search-box">
             <h3> Where's My Splashpad, Toronto? </h3>
 
+            <div id="error" class="alert alert-error"></div>
+
             <div id="search-bar">
                 <form class="form-search"> <div class="input-append">
-                    <input class="search-query" type="text" />
-                    <button class="btn">Search</button>
+                    <input id="address" class="search-query" type="text" />
+                    <button id="address-button" class="btn">Search</button>
                 </div> </form>
             </div>
 
