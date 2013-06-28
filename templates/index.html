@@ -81,6 +81,11 @@
             .infowin_content {
                 font-size: 0.80em;
             }
+
+            #excol-button {
+                cursor: pointer;
+                float: right;
+            }
         </style>
 
         <script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false&extension=.js"></script>
@@ -98,24 +103,26 @@
 
         <div id="search-box">
             <h3> Where's My Splashpad, Toronto? </h3>
-
             <div id="error" class="alert alert-error"></div>
-
-            <div id="search-bar">
-                <form class="form-search"> <div class="input-append">
-                    <input id="address" class="search-query" type="text" />
-                    <button id="address-button" class="btn">Search</button>
-                </div> </form>
+            <div id="expandable">
+                <div id="search-bar">
+                    <form class="form-search"> <div class="input-append">
+                        <input id="address" class="search-query" type="text" />
+                        <button id="address-button" class="btn">Search</button>
+                    </div> </form>
+                </div>
+                <footer>
+                    &copy; Copyright 2013
+                        <a href="mailto:brandon@sandrowicz.org">Brandon Sandrowicz</a>.
+                    Built using
+                        <a href="http://twitter.github.io/bootstrap/">Bootstrap</a>,
+                        <a href="http://jquery.com">jQuery</a>,
+                        and the <a href="https://developers.google.com/maps/">Google Maps API</a>.
+                </footer>
             </div>
-
-            <footer>
-                &copy; Copyright 2013
-                    <a href="mailto:brandon@sandrowicz.org">Brandon Sandrowicz</a>.
-                Built using
-                    <a href="http://twitter.github.io/bootstrap/">Bootstrap</a>,
-                    <a href="http://jquery.com">jQuery</a>,
-                    and the <a href="https://developers.google.com/maps/">Google Maps API</a>.
-            </footer>
+            <div>
+                <i id="excol-button"></i>
+            </div>
         </div>
     </body>
 </html>

@@ -21,6 +21,49 @@ Site = {
             event.preventDefault();
             Site.searchForAddress();
         });
+
+        this.expandable.init();
+    },
+
+    'expandable': {
+        'button': {
+            init: function() {
+                this.element = $("#excol-button");
+            },
+            set_expanded: function() {
+                this.element.attr('class', 'icon-minus-sign');
+            },
+            set_collapsed: function() {
+                this.element.attr('class', 'icon-plus-sign');
+            },
+        },
+        'init': function() {
+            this.div = $("#expandable");
+            this.button.init();
+            this.collapse();
+            this.button.element.click(this.clickHandler);
+        },
+        'clickHandler': function(event) {
+            event.preventDefault;
+            Site.expandable.toggle();
+        },
+        'expand': function() {
+            this.div.show();
+            this.button.set_expanded();
+            this.state = "expanded";
+        },
+        'collapse': function() {
+            this.div.hide();
+            this.button.set_collapsed();
+            this.state = "collapsed";
+        },
+        'toggle': function() {
+            if (this.state == "expanded") {
+                this.collapse();
+            } else {
+                this.expand();
+            }
+        },
     },
 
     'showError': function(errorMessage) {
