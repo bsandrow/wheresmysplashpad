@@ -1,0 +1,12 @@
+- Some parks don't have good coordinates. E.g. Toronto Island park has it's
+  address at the Ferry departure point along Queen's Quay rather than
+  coordinates actually *on* Toronto Island.
+- Getting good coordinates for where the splash pads actually are. Possibly by
+  finding the splash pads and geocoding them ourselves, using our phone's GPS?
+- Better info window information.
+- Updating this from being a static page, to allowing user input on whether or
+  not the splash pads are open / functioning.
+- Add the information about the dates that the splash pads are open this summer
+  somewhere.
+- Link to the Toronto.ca splash pads site somewhere
+
