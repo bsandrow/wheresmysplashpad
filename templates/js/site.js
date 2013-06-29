@@ -3,7 +3,6 @@ Site = {
         zoom: 11,
         center: new google.maps.LatLng(43.726, -79.385),
         mapTypeId: google.maps.MapTypeId.ROADMAP,
-        // streetViewControl: false,
         panControl: false,
         zoomControlOptions: {
             style: google.maps.ZoomControlStyle.SMALL,
