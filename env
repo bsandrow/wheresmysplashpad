@@ -1,0 +1,3 @@
+pydev
+workon wheresmysplashpad
+alias dev-server="bash -c 'cd template && python -m SimpleHTTPServer'"
