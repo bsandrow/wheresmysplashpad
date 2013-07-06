@@ -62,7 +62,7 @@ var App = (function($) {
     // ====
 
     var fetch_park_data = function() {
-        $.ajax('/splash-pads.json', {
+        $.ajax('splash-pads.json', {
             'dataType': 'json',
             'error': function() {
                 site.show_error("<strong>Error!</strong> Unable to fetch park data.");
