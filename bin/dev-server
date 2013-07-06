@@ -1,0 +1,28 @@
+#!/bin/bash
+
+IFS="$(printf "\t\n")"
+
+# ====
+
+die () {
+        die_with_status 1 "$@"
+}
+
+die_with_status () {
+        status=$1
+        shift
+        echo >&2 "$*"
+        exit "$status"
+}
+
+# ====
+
+ENV_FILE="$(dirname "$0")/../env"
+echo "Sourcing env file: $ENV_FILE"
+source "$ENV_FILE"
+
+WWW_ROOT="$(dirname "$0")/../templates"
+echo "Serving from: $WWW_ROOT"
+cd "$WWW_ROOT"
+
+python -m SimpleHTTPServer

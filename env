@@ -1,3 +1,25 @@
-pydev
+LINUX_RELEASE=$(lsb_release --id | sed 's/^Distributor ID:\s\+//')
+
+load_virtualenvwrapper () {
+    if [ "$LINUX_RELEASE" = "Ubuntu" ]; then
+        virtualenvwrapper='/etc/bash_completion.d/virtualenvwrapper'
+    else
+        virtualenvwrapper='virtualenvwrapper'
+    fi
+    . "$virtualenvwrapper"
+}
+
+if ! type workon >/dev/null 2>&1; then
+    echo "Attempting to load virtualenvwrapper..."
+    if load_virtualenvwrapper; then
+        echo "Loaded virtualenvwrapper."
+    else
+        echo "Error: Failed to load virtualenvwrapper." >&2
+        return 1
+    fi
+fi
+
 workon wheresmysplashpad
-alias dev-server="bash -c 'cd template && python -m SimpleHTTPServer'"
+true
+
+# vim:set ft=sh:
