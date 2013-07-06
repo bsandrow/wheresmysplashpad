@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Where's My Splashpad, Toronto?</title>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="Brandon Sandrowicz <brandon@sandrowicz.org>">
+        <meta name="description" content="Where's My Splashpad - Find Your Nearest Splashpad in Toronto">
+        <meta name="keywords" content="splashpad, spash pad, swimming, Toronto, Ontario, Canada, map, location">
+
+        <link href="/css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+
+        <link href="/css/site.less" rel="stylesheet/less">
+        <script src="/js/less-1.4.0.min.js"></script>
+
+        <script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false&extension=.js"></script>
+        <script src="/js/site.js"></script>
+        <script>
+            $(document).ready(function() {
+                App.initialize();
+            });
+        </script>
+    </head>
+    <body>
+        <div id="search-box">
+            <h3> Where's My Splashpad, Toronto? </h3>
+            <div id="error" class="alert alert-error"></div>
+            <div id="expandable">
+                <div id="search-bar">
+                    <form class="form-search"> <div class="input-append">
+                        <input id="address" class="search-query" type="text" />
+                        <button id="address-button" class="btn">Search</button>
+                    </div> </form>
+                </div>
+                <footer>
+                    &copy; Copyright 2013
+                        <a href="mailto:brandon@sandrowicz.org">Brandon Sandrowicz</a>.
+                    Built using
+                        <a href="http://twitter.github.io/bootstrap/">Bootstrap</a>,
+                        <a href="http://jquery.com">jQuery</a>,
+                        and the <a href="https://developers.google.com/maps/">Google Maps API</a>.
+                </footer>
+            </div>
+            <div>
+                <i id="excol-button"></i>
+            </div>
+        </div>
+        <div id="map-container">
+            <div id="map"></div>
+        </div>
+
+    </body>
+</html>

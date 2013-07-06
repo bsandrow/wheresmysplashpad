@@ -1,0 +1,152 @@
+Site = {
+    'markers': [],
+
+    'map_options': {
+        zoom: 11,
+        center: new google.maps.LatLng(43.726, -79.385),
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        panControl: false,
+        zoomControlOptions: {
+            style: google.maps.ZoomControlStyle.SMALL,
+        },
+    },
+
+    'initialize': function() {
+        this.error_div = $('#error');
+        this.hideError();
+
+        this.map_div = $('#map');
+        this.map = new google.maps.Map(this.map_div[0], this.map_options);
+        this.fetchParkData();
+
+        this.geocoder = new google.maps.Geocoder();
+        this.address_box = $('#address');
+        this.address_btn = $('#address-button');
+
+        this.address_btn.click(function(event) {
+            event.preventDefault();
+            Site.searchForAddress();
+        });
+
+        this.expandable.init();
+    },
+
+    'expandable': {
+        'button': {
+            init: function() {
+                this.element = $("#excol-button");
+            },
+            set_expanded: function() {
+                this.element.attr('class', 'icon-minus-sign');
+            },
+            set_collapsed: function() {
+                this.element.attr('class', 'icon-plus-sign');
+            },
+        },
+        'init': function() {
+            this.div = $("#expandable");
+            this.button.init();
+            this.collapse();
+            this.button.element.click(this.clickHandler);
+        },
+        'clickHandler': function(event) {
+            event.preventDefault;
+            Site.expandable.toggle();
+        },
+        'expand': function() {
+            this.div.show();
+            this.button.set_expanded();
+            this.state = "expanded";
+        },
+        'collapse': function() {
+            this.div.hide();
+            this.button.set_collapsed();
+            this.state = "collapsed";
+        },
+        'toggle': function() {
+            if (this.state == "expanded") {
+                this.collapse();
+            } else {
+                this.expand();
+            }
+        },
+    },
+
+    'showError': function(errorMessage) {
+        this.error_div.show().html(errorMessage);
+    },
+
+    'hideError': function() {
+        this.error_div.hide();
+    },
+
+    'centerMap': function(position) {
+        this.map.setCenter(position);
+    },
+
+    'searchForAddress': function() {
+        var site = this;
+        site.geocoder.geocode(
+            {
+                address: site.address_box[0].value
+            },
+            function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    var latlng = new google.maps.LatLng(
+                        results[0].geometry.location.lat(),
+                        results[0].geometry.location.lng(),
+                    );
+
+                    site.centerMap(latlng);
+                    var marker = new google.maps.Marker({
+                        position: latlng,
+                        map: site.map,
+                        icon: {
+                            path: google.maps.SymbolPath.CIRCLE,
+                            scale: 5,
+                        },
+                    });
+                } else {
+                    site.setError("<strong>Error!</strong> Could not find any result.");
+                }
+            }
+        );
+    },
+
+    'addParkToMap': function(park) {
+        var place = new google.maps.LatLng(park.coords[0], park.coords[1]);
+        var marker = new google.maps.Marker({
+            position: place,
+            map: this.map,
+            title: park.name,
+            scrollWheel: false,
+        });
+        var info_content = '<div class="infowin_content">'+
+            '<h1>' + park.name + '</h1>' +
+            '<a href="' + park.url + '" title="' + park.name +
+            ' Page"> Park Page on Toronto.ca </a>'+
+            '</div>';
+        var infowindow = new google.maps.InfoWindow({
+            content: info_content
+        });
+        google.maps.event.addListener(marker, 'click', function() {
+            infowindow.open(this.map, marker);
+        });
+    },
+
+    'fetchParkData': function() {
+        var site = this;
+        $.ajax(
+            '/splash-pads.json',
+            {
+                'dataType': 'json',
+                'error': function() { site.showError("<strong>Error!</strong> Unable to fetch park data."); },
+                'success': function(data) {
+                    site.park_data = data;
+                    for (var i = 0; i < data.length; i++) {
+                        site.addParkToMap(data[i]);
+                    }
+                }
+            });
+    },
+};
