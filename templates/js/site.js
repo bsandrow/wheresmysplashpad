@@ -150,6 +150,7 @@ var App = (function($) {
                         var marker = new google.maps.Marker({
                             position: latlng,
                             map: App.map.map,
+                            title: result.formatted_address,
                             icon: {
                                 path: google.maps.SymbolPath.CIRCLE,
                                 scale: 5,
